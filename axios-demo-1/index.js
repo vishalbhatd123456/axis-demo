@@ -23,10 +23,24 @@ async function getDataForMoreParameters() {
     console.log("the request response is ", response.data);
 }
 
+async function updateRequest(){
+    const updatedPost = {
+        title:'Updated the new post',
+        body:'Hello from new post',
+        userId:10
+    };
+    //encapsulate within the try catch later
+    const response = await axios.put("https://jsonplaceholder.typicode.com/posts/1", updatedPost);
+    console.log("the updated request is ", response.data);
+}
+
 getData();
 getDataForMoreParameters();
+updateRequest();
 promiseAllForConcurrentReq();
 cancelRequests();
+deletePosts();
+errorHandlingExample();
 
 async function promiseAllForConcurrentReq(){
     const [post1,post2] = await Promise.all(
@@ -53,4 +67,31 @@ async function cancelRequests() {
         {
             console.error('Request canceled:', error.message);
         }
+}
+
+async function deletePosts() {
+    const response = await axios.delete("https://jsonplaceholder.typicode.com/posts/1");
+    console.log("Deletion status", response.status);
+}
+
+
+async function errorHandlingExample() {
+    try
+    {
+        axios.get("https://jsonplaceholder.typicode.com/unknown-endpoint");
+    }
+    catch(error)
+    {
+        if(error.response)
+        {
+            console.log("Error from response", error.response.status, error.response.message);
+        }
+        else if(error.request)
+        {
+            console.log("Error from request",error.request.status, error.request.message);
+        }else
+        {
+            console.log("No request setup",error.message);
+        }
+    }
 }
